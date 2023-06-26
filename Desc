@@ -1,0 +1,91 @@
+You are working as Business Analyst in IJS Bank Limited. Currently your organization is working on Loan Applicant Clients for the current quarter. The Manager of the Branch asked you to analyze Loan Applicant’s data and to Present appropriate report on the shared data. The report should be demonstrated using Dashboard into MS Excel.
+
+Features of Dashboard
+
+Gender Ratio of Applicants
+Car Owner/ Non-Owner Ratio
+House Owner/ Non-Owner Ratio
+Client Income Type
+Client’s Level of Education
+Client’s Housing Type
+Client’s Family Status
+Client’s Occupation Type
+Separate Worksheet Required for
+
+Data Summary of All Female Client’s for Income and Loan Amount using New Functions
+Data Summary of All Male Client’s for Income and Loan Amount using List Functions
+Data Summary for all Flag Columns like (FLAG_DOCUMENT_2, FLAG_DOCUMENT_3 etc.) using all variants of DCOUNT function.
+Other Deliverables
+
+Create a Macro for Data Formatting (Conditional Formatting, Freezing Panes) of workbook as same will be applied to the data of next quarter
+Ans.:
+
+Sub ApplyFormatting()
+ActiveSheet.Range("A2").Select
+ActiveWindow.FreezePanes = True
+Range("A1:B10").Select
+Selection.FormatConditions.AddColorScale ColorScaleType:=3
+Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+End Sub
+
+ 
+
+Create VBA Code to convert selected data into pdf from applicant data
+Ans.:
+
+Sub PrintSelectionToPDF()
+
+Dim ThisRng As Range
+Dim strFile As String
+Dim myfile As Variant
+
+If Selection.Count = 1 Then
+Set ThisRng = Application.InputBox("Select a range", "Get Range", Type:=8)
+Else
+Set ThisRng = Selection
+End If
+strFile = "Selection" & "_" _
+& Format(Now(), "yyyymmdd_hhmmss") _
+& ".pdf"
+strFile = ThisWorkbook.Path & "" & strFile
+
+myfile = Application.GetSaveAsFilename _
+(InitialFileName:=strFile, _
+filefilter:="PDF Files (*.pdf), *.pdf", _
+Title:="Select Folder and File Name to Save as PDF")
+
+If myfile <> "False" Then
+ThisRng.ExportAsFixedFormat Type:=xlTypePDF, Filename:= _
+myfile, Quality:=xlQualityStandard, IncludeDocProperties:=True, _
+IgnorePrintAreas:=False, OpenAfterPublish:=True
+Else
+MsgBox "No File Selected. PDF will not be saved", vbOKOnly, "No File Selected"
+End If
+
+End Sub
+
+Check Spelling mistakes in the workbook using VBA Code
+Ans.:
+
+Sub CheckSpelling()
+
+Dim ws As Worksheet
+Dim rngToCheck As Range
+Dim cell As Range
+
+Set ws = ActiveSheet
+Set rngToCheck = ws.UsedRange
+
+Application.DisplayAlerts = False
+Application.ScreenUpdating = False
+
+For Each cell In rngToCheck
+If Not IsEmpty(cell) Then
+cell.CheckSpelling
+End If
+Next cell
+
+Application.DisplayAlerts = True
+Application.ScreenUpdating = True
+
+End Sub
